@@ -26,7 +26,9 @@ FIRMWARE = ROOT / "firmware" / "t4s3-lvgl-micropython.bin"
 
 PIO_PACKAGES = Path(env.subst("$PROJECT_PACKAGES_DIR"))
 ESPTOOL = PIO_PACKAGES / "tool-esptoolpy" / "esptool.py"
-MKFATFS = PIO_PACKAGES / "tool-mkfatfs" / "mkfatfs.exe"
+# mkfatfs ships as a native executable per host platform; only Windows uses .exe.
+MKFATFS = PIO_PACKAGES / "tool-mkfatfs" / (
+    "mkfatfs.exe" if sys.platform == "win32" else "mkfatfs")
 
 SUPPORT_FILES = [
     (SUPPORT / "boot.py", "boot.py"),

@@ -25,11 +25,34 @@ setup can take several minutes while tools are installed.
    * Search for ["PlatformIO IDE"](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and install it.
 
 
+## Linux: serial port access
+
+Windows and macOS need no extra setup. On Linux the board's serial port is
+owned by a system group, so PlatformIO cannot open it until you grant access.
+Install the PlatformIO udev rules once:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules \
+  | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+Then unplug and reconnect the board. If the port is still unreadable, add
+yourself to the group that owns it (`ls -l /dev/ttyACM0` shows which):
+`dialout` on Debian/Ubuntu, `uucp` on Arch.
+
+```bash
+sudo usermod -aG dialout $USER   # or uucp
+```
+
+Log out and back in for the group change to take effect.
+
 ## How to run the program
 
 1. Open the locally cloned repository with Visual Studio Code
     * If the "Do you trust the authors of the files in this folder?" dialog appears, click on "Yes, I trust the authors"
-2. Open up the file `project/project.ino`
+2. Open up the file `project/main.py`
 3. Connect your ESP32 to your computer via a USB cable.
 4. Build and upload the project to the device. See screenshot.
 
@@ -72,6 +95,18 @@ A retained image on the AMOLED does not mean the application is running.
 2. Disconnect and reconnect the USB cable if the port is locked.
 3. Repeat the BOOT/RESET upload-mode sequence.
 4. Start Upload again.
+
+On Linux, `Permission denied` on `/dev/ttyACM0` means the udev rules above are
+not installed.
+
+## Upload stops at "Stub running... No serial data received"
+
+The board flashes over the ESP32-S3's built-in USB port, where the baud rate is
+virtual and cannot be renegotiated. Check that `upload_speed` in
+`platformio.ini` is still `115200`; raising it produces exactly this error.
+
+After a failed upload the board may not restart on its own. Press **RESET**
+by hand before retrying.
 
 ## The screen is black
 
