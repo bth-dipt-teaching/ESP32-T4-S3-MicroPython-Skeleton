@@ -54,9 +54,16 @@ Log out and back in for the group change to take effect.
     * If the "Do you trust the authors of the files in this folder?" dialog appears, click on "Yes, I trust the authors"
 2. Open up the file `project/main.py`
 3. Connect your ESP32 to your computer via a USB cable.
-4. Build and upload the project to the device. See screenshot.
+4. Open the PlatformIO tab in the left sidebar, expand
+   **Project Tasks > t4s3-micropython > Custom**, and run **Deploy complete
+   project**. This flashes the MicroPython firmware and your Python files in
+   one step, and is what the Upload button runs too.
 
-![[screenshot](./assets/screenshot.png)](./assets/screenshot.png)
+Once the board has firmware on it, **Flash Python application** is faster for
+everyday work: it writes only your `project/` files and leaves the firmware
+alone.
+
+![PlatformIO tasks for this project](./assets/screenshot.png)
 
 ---
 
