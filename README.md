@@ -115,6 +115,23 @@ virtual and cannot be renegotiated. Check that `upload_speed` in
 After a failed upload the board may not restart on its own. Press **RESET**
 by hand before retrying.
 
+## Upload fails with "Invalid head of packet"
+
+This appears once a Python application is already running on the board: it
+prints to the same USB port the uploader needs, and the automatic reset into
+upload mode cannot interrupt it. Enter upload mode by hand instead.
+
+1. Hold **BOOT**.
+2. Tap **RESET**.
+3. Release **BOOT**.
+4. Start the upload task immediately.
+
+The board stays in upload mode afterwards, so press **RESET** once when the
+upload finishes to start your application.
+
+Close PlatformIO Monitor first if it is running; anything else holding the
+serial port causes the same error.
+
 ## The screen is black
 
 Open PlatformIO Monitor after resetting. Startup errors are printed at 115200
